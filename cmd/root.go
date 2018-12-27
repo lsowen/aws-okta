@@ -112,7 +112,9 @@ func init() {
 	for _, backendType := range keyring.AvailableBackends() {
 		backendsAvailable = append(backendsAvailable, string(backendType))
 	}
-	RootCmd.PersistentFlags().StringVarP(&mfaConfig.DuoDevice, "mfa-duo-device", "m", "phone1", "Device to use phone1, phone2, u2f or token")
+	RootCmd.PersistentFlags().StringVarP(&mfaConfig.Provider, "mfa-provider", "", "", "MFA Provider to use (eg DUO, OKTA, GOOGLE)")
+	RootCmd.PersistentFlags().StringVarP(&mfaConfig.FactorType, "mfa-factor-type", "", "", "MFA Factor Type to use (eg push, token:software:totp)")
+	RootCmd.PersistentFlags().StringVarP(&mfaConfig.DuoDevice, "mfa-duo-device", "", "phone1", "Device to use phone1, phone2, u2f or token")
 	RootCmd.PersistentFlags().StringVarP(&backend, "backend", "b", "", fmt.Sprintf("Secret backend to use %s", backendsAvailable))
 	RootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "Enable debug logging")
 }
