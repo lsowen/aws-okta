@@ -65,3 +65,27 @@ func sourceProfile(p string, from profiles) string {
 	}
 	return p
 }
+
+func GetValueFromProfile(profile string, from profiles, config_key string) (string, string, error) {
+	for {
+		config_value, ok := from[profile][config_key]
+		if ok {
+			return config_value, profile, nil
+		}
+
+		// Traverse up the chain of `source_profile`
+		profile, ok = from[profile]["source_profile"]
+		if !ok {
+			break
+		}
+	}
+
+	// Fallback to `okta` if no profile supplies the value
+	profile = "okta"
+	config_value, ok := from[profile][config_key]
+	if ok {
+		return config_value, profile, nil
+	}
+
+	return "", "", fmt.Errorf("Could not find %s in %s, parent profiles, or okta", config_key, profile)
+}
